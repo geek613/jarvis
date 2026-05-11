@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: jarvis-code-generate # 服务名
+  profiles:
+    active: dev # 环境标识

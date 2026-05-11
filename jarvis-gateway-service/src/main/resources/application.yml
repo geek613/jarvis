@@ -1,0 +1,70 @@
+spring:
+  application:
+    name: jarvis-gateway-service # 服务名
+  profiles:
+    active: dev # 环境标识
+  cloud:
+    nacos:
+      server-addr: 127.0.0.1:8848 # Nacos 地址
+      username: nacos
+      password: nacos
+      config:
+        file-extension: yaml # 配置文件格式
+        # group: DEFAULT_GROUP # 默认分组，可不填
+        namespace: devhspro
+      discovery:
+        namespace: devhspro
+    gateway:
+      server:
+        webflux:
+          routes:
+            #==============================
+            # 人脸识别认证服务
+            #==============================
+            - id: face-recognize-route
+              uri: lb://jarvis-face-recognition-service
+              predicates:
+                - Path=/api/face/**
+              filters:
+                - StripPrefix=1
+            #==============================
+            # 账密认证服务
+            #==============================
+            - id: auth-route
+              uri: lb://jarvis-auth-service
+              predicates:
+                - Path=/api/system/**
+              filters:
+                - StripPrefix=1
+            #==============================
+            # 语音文字聊天服务
+            #==============================
+            - id: talk-chat-route
+              uri: lb://jarvis-agent-service
+              predicates:
+                - Path=/api/jarvis/**
+              filters:
+                - StripPrefix=1
+              metadata:
+                response-timeout: 300000
+                connect-timeout: 5000
+            #==============================
+            # oss凭证服务
+            #==============================
+            - id: oss-service-route
+              uri: lb://jarvis-oss-service
+              predicates:
+                - Path=/api/oss/**
+              filters:
+                - StripPrefix=1
+
+  config:
+    import:
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}?refreshEnabled=true
+server:
+  port: 6130
+# 自定义 JWT 配置
+jwt:
+  secret: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+  # 过期时间 这里设置为 2 小时 (1000 * 60 * 60 * 2)
+  expiration: 7200000

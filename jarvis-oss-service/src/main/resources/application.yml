@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: jarvis-oss-service # 服务名
+  profiles:
+    active: dev # 环境标识
+  cloud:
+    nacos:
+      username: nacos
+      password: nacos
+      config:
+        server-addr: 127.0.0.1:8848 # Nacos 地址
+        file-extension: yaml # 配置文件格式
+        # group: DEFAULT_GROUP # 默认分组，可不填
+        namespace: devhspro
+      discovery:
+        namespace: devhspro
+  config:
+    import:
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}?refreshEnabled=true
+server:
+  port: 6133
+qiniu:
+  access-key: "5KDvz7r9ptd-opVLyviNi8MJdlgwD8MWTC1LFW8g"
+  secret-key: "Pn8Ws6Aw3Z7-uAHmZqy-KIgna8JbSXcLYNy-8rFw"
+  bucket: "jarvis-oss-service"
+  domain: "http://tep8thgkp.hb-bkt.clouddn.com"
