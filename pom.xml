@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <modules>
-        <module>jarvis-health-test</module>
+        <module>jarvis-system-health</module>
         <module>jarvis-common</module>
         <module>jarvis-face-recognize-service</module>
         <module>jarvis-gateway-service</module>
@@ -18,12 +18,15 @@
         <module>jarvis-agent-service</module>
         <module>jarvis-oss-service</module>
         <module>jarvice-code-generate</module>
+        <module>jarvis-bi-service</module>
+        <module>jarvis-common-security</module>
     </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jarvis.version>1.0-SNAPSHOT</jarvis.version>
         <spring-boot.version>3.5.10</spring-boot.version>
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
@@ -51,6 +54,21 @@
     </repositories>
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.jarvis</groupId>
+                <artifactId>jarvis-common</artifactId>
+                <version>${jarvis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jarvis</groupId>
+                <artifactId>jarvis-common-core</artifactId>
+                <version>${jarvis.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jarvis</groupId>
+                <artifactId>jarvis-common-security</artifactId>
+                <version>${jarvis.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -120,6 +138,21 @@
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${jjwt.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${jjwt.version}</version>
             </dependency>
         </dependencies>
 

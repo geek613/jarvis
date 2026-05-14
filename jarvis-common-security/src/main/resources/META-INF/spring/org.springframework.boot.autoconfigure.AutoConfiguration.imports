@@ -1,0 +1,4 @@
+# org.springframework.boot.autoconfigure.AutoConfiguration.imports
+org.jarvis.security.config.SecurityConfig
+org.jarvis.security.filter.InternalTokenFilter
+org.jarvis.security.properties.SecurityProperties

@@ -1,0 +1,24 @@
+{
+  "tooltip": { "trigger": "axis" },
+  "grid": { "left": "3%", "right": "4%", "bottom": "3%", "containLabel": true },
+  "xAxis": {
+    "type": "category",
+    "_comment": "提示：此处的分类数据需根据实际情况进行动态扩展，不要局限于当前数量",
+    "data": ["xxx", "xxx"],
+    "axisLine": { "lineStyle": { "color": "#555" } }
+  },
+  "yAxis": {
+    "type": "value",
+    "axisLine": { "lineStyle": { "color": "#555" } },
+    "splitLine": { "lineStyle": { "color": "#333" } }
+  },
+  "series": [
+    {
+      "name": "xxx",
+      "type": "bar",
+      "_comment": "提示：此处数据需与 xAxis 的 data 保持同步扩展，动态填充真实业务数据",
+      "data": ["xxx", "xxx"],
+      "itemStyle": { "color": "#00d4ff" }
+    }
+  ]
+}

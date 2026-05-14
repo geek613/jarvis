@@ -19,6 +19,15 @@ spring:
         webflux:
           routes:
             #==============================
+            # 系统
+            #==============================
+            - id: system-health-route
+              uri: lb://jarvis-system-health
+              predicates:
+                - Path=/api/health/**
+              filters:
+                - StripPrefix=1
+            #==============================
             # 人脸识别认证服务
             #==============================
             - id: face-recognize-route
@@ -42,7 +51,7 @@ spring:
             - id: talk-chat-route
               uri: lb://jarvis-agent-service
               predicates:
-                - Path=/api/jarvis/**
+                - Path=/api/jarvis/**,/api/jChatMessages/**
               filters:
                 - StripPrefix=1
               metadata:
@@ -55,6 +64,15 @@ spring:
               uri: lb://jarvis-oss-service
               predicates:
                 - Path=/api/oss/**
+              filters:
+                - StripPrefix=1
+            #==============================
+            # BI报表服务
+            #==============================
+            - id: bi-service-route
+              uri: lb://jarvis-bi-service
+              predicates:
+                - Path=/api/jBiGroup/**, /api/jBiReport/**
               filters:
                 - StripPrefix=1
 

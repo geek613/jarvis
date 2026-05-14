@@ -1,0 +1,42 @@
+{
+  "tooltip": {
+    "trigger": "item",
+    "backgroundColor": "rgba(50, 50, 50, 0.7)",
+    "borderColor": "#555",
+    "textStyle": { "color": "#fff" },
+    "formatter": "{a} <br/>{b}: {c} ({d}%)"
+  },
+  "series": [
+    {
+      "name": "占比统计",
+      "type": "pie",
+      "radius": ["0%", "70%"],
+      "center": ["50%", "50%"],
+      "avoidLabelOverlap": true,
+      "itemStyle": {
+        "borderRadius": 8,
+        "borderColor": "#1a1a1a",
+        "borderWidth": 2
+      },
+      "label": {
+        "show": true,
+        "color": "#ccc",
+        "formatter": "{b}: {d}%"
+      },
+      "emphasis": {
+        "label": {
+          "show": true,
+          "fontSize": 16,
+          "fontWeight": "bold"
+        }
+      },
+      "data": [
+        { "value": 1048, "name": "核心业务", "itemStyle": { "color": "#00d4ff" } },
+        { "value": 735, "name": "次要业务", "itemStyle": { "color": "#008db1" } },
+        { "value": 580, "name": "其他业务", "itemStyle": { "color": "#005a74" } },
+        { "value": 484, "name": "外部引流", "itemStyle": { "color": "#22333b" } },
+        { "value": "...", "name": "更多数据可在此扩展" }
+      ]
+    }
+  ]
+}

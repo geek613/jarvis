@@ -1,10 +1,14 @@
 package org.jarvis.agent.factory;
 
+import dev.langchain4j.memory.chat.ChatMemoryProvider;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;
 import jakarta.annotation.PostConstruct; // 如果是旧版Spring Boot(2.x)，请换成 javax.annotation.PostConstruct
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.jarvis.agent.core.store.PersistentChatMemoryStore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -26,6 +30,9 @@ public class AiServiceFactory {
     @Value("${deepseek.thinking}")
     private String thinking;
 
+    @Autowired
+    private PersistentChatMemoryStore store;
+
     /**
      * -- GETTER --
      *  获取chatModel
@@ -33,6 +40,8 @@ public class AiServiceFactory {
     // 将模型实例作为单例成员变量保留，提升性能
     @Getter
     private OpenAiChatModel chatModel;
+
+    private ChatMemoryProvider chatMemoryProvider;
 
     /**
      * 在 Spring 注入完 @Value 属性后，自动初始化底层模型
@@ -47,7 +56,6 @@ public class AiServiceFactory {
                 .apiKey(apiKey)
                 .modelName(modelName)
                 .customParameters(Map.of("thinking", thinkingConfig))
-                .responseFormat("json_object")
                 .logRequests(true)
                 .logResponses(true)
                 .build();
@@ -55,12 +63,27 @@ public class AiServiceFactory {
         log.info("DeepSeek OpenAiChatModel 初始化完成，模型：{}", modelName);
     }
 
+    @PostConstruct
+    public void initChatMemoryProvider() {
+        this.chatMemoryProvider = memoryId -> MessageWindowChatMemory.builder()
+                .id(memoryId)
+                .maxMessages(10)
+                .chatMemoryStore(store)
+                .build();
+    }
+
     /**
      * 基础方法：无 Tools
      */
-    public <T> T createService(Class<T> serviceClass) {
+    public <T> T createService(Class<T> serviceClass, boolean enableMemory) {
+        if(enableMemory){
+            return AiServices.builder(serviceClass)
+                    .chatModel(chatModel)
+                    .chatMemoryProvider(chatMemoryProvider)
+                    .build();
+        }
         return AiServices.builder(serviceClass)
-                .chatModel(chatModel) // 标准API通常是 chatLanguageModel，部分版本可能是 chatModel
+                .chatModel(chatModel)
                 .build();
     }
 
@@ -70,11 +93,19 @@ public class AiServiceFactory {
      *
      * @param serviceClass AiService 接口类
      * @param tools        带有 @Tool 注解的实例对象 (支持 1个 或 逗号分隔的多个)
+     *
      */
-    public <T> T createService(Class<T> serviceClass, Object... tools) {
+    public <T> T createService(Class<T> serviceClass, boolean enableMemory, Object... tools) {
+        if(enableMemory){
+            return AiServices.builder(serviceClass)
+                    .chatModel(chatModel)
+                    .chatMemoryProvider(chatMemoryProvider)
+                    .tools(tools)
+                    .build();
+        }
         return AiServices.builder(serviceClass)
                 .chatModel(chatModel)
-                .tools(tools) // LangChain4j 原生支持传入 Object 数组
+                .tools(tools)
                 .build();
     }
 

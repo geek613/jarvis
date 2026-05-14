@@ -1,0 +1,51 @@
+{
+  "tooltip": {
+    "trigger": "item",
+    "axisPointer": { "type": "cross" }
+  },
+  "grid": {
+    "left": "3%",
+    "right": "4%",
+    "bottom": "3%",
+    "containLabel": true
+  },
+  "xAxis": {
+    "type": "value",
+    "name": "维度X",
+    "axisLine": { "lineStyle": { "color": "#555" } },
+    "splitLine": { "lineStyle": { "color": "#333" } }
+  },
+  "yAxis": {
+    "type": "value",
+    "name": "维度Y",
+    "axisLine": { "lineStyle": { "color": "#555" } },
+    "splitLine": { "lineStyle": { "color": "#333" } }
+  },
+  "series": [
+    {
+      "name": "分布特征",
+      "type": "scatter",
+      "symbolSize": 12,
+      "_comment": "数据点扩展提示：data数组中的每个子数组代表[x, y]坐标。此处可根据实际数据点数量无限扩展，不要局限于示例个数。",
+      "data": [
+        [10, 8.04],
+        [8, 6.95],
+        [13, 7.58],
+        [9, 8.81],
+        [11, 8.33],
+        [14, 9.96],
+        [6, 7.24],
+        [4, 4.26],
+        [12, 10.84],
+        [7, 4.82],
+        [5, 5.68]
+      ],
+      "itemStyle": {
+        "color": "#00d4ff",
+        "opacity": 0.8,
+        "shadowBlur": 10,
+        "shadowColor": "rgba(0, 212, 255, 0.5)"
+      }
+    }
+  ]
+}

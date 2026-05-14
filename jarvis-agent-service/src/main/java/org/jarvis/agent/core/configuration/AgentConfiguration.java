@@ -1,5 +1,6 @@
 package org.jarvis.agent.core.configuration;
 
+import org.jarvis.agent.core.agent.ChartConfigAgent;
 import org.jarvis.agent.core.agent.DataCheckAgent;
 import org.jarvis.agent.core.agent.DataProcessAgent;
 import org.jarvis.agent.core.agent.LeaderAgent;
@@ -15,14 +16,18 @@ public class AgentConfiguration {
     private AiServiceFactory aiServiceFactory;
     @Bean
     public DataProcessAgent dataProcessAgent() {
-        return aiServiceFactory.createService(DataProcessAgent.class);
+        return aiServiceFactory.createService(DataProcessAgent.class, false);
     }
     @Bean
     public DataCheckAgent dataCheckAgent() {
-        return aiServiceFactory.createService(DataCheckAgent.class);
+        return aiServiceFactory.createService(DataCheckAgent.class, false);
+    }
+    @Bean
+    public ChartConfigAgent chartConfigAgent() {
+        return aiServiceFactory.createService(ChartConfigAgent.class, false);
     }
     @Bean
     public LeaderAgent leaderAgent(LeaderTools leaderTools) {
-        return aiServiceFactory.createService(LeaderAgent.class, leaderTools);
+        return aiServiceFactory.createService(LeaderAgent.class, false, leaderTools);
     }
 }

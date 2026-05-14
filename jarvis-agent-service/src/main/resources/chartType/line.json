@@ -1,0 +1,26 @@
+{
+  "tooltip": { "trigger": "axis" },
+  "grid": { "left": "3%", "right": "4%", "bottom": "3%", "containLabel": true },
+  "xAxis": {
+    "type": "category",
+    "_comment": "提示：这里的类别数据请根据实际数据量动态生成，不限于此示例的个数",
+    "data": ["1月", "2月", "3月", "4月", "5月", "6月"],
+    "axisLine": { "lineStyle": { "color": "#555" } }
+  },
+  "yAxis": {
+    "type": "value",
+    "axisLine": { "lineStyle": { "color": "#555" } },
+    "splitLine": { "lineStyle": { "color": "#333" } }
+  },
+  "series": [
+    {
+      "name": "趋势",
+      "type": "line",
+      "smooth": true,
+      "_comment": "提示：这里的数据需与 xAxis 的 data 长度一一对应，请根据实际业务数据量进行动态扩展",
+      "data": [820, 932, 901, 934, 1290, 1330],
+      "itemStyle": { "color": "#00d4ff" },
+      "areaStyle": { "color": "rgba(0, 212, 255, 0.15)" }
+    }
+  ]
+}

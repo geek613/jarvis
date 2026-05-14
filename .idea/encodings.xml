@@ -7,18 +7,22 @@
     <file url="file://$PROJECT_DIR$/jarvis-agent-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jarvis-auth-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jarvis-auth-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jarvis-bi-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jarvis-bi-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jarvis-common-core/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jarvis-common-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jarvis-common-security/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jarvis-common-security/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jarvis-common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jarvis-common/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jarvis-face-recognize-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jarvis-face-recognize-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jarvis-gateway-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jarvis-gateway-service/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jarvis-health-test/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/jarvis-health-test/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jarvis-oss-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/jarvis-oss-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jarvis-system-health/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jarvis-system-health/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
   </component>

@@ -97,4 +97,11 @@ public class OssController {
             return JarvisResult.error("删除失败");
         }
     }
+
+    @GetMapping("/getQiniuDownloadUrl")
+    public JarvisResult<String> getQiniuDownloadUrl(@RequestParam("fileKey") String fileKey) {
+        Auth auth = Auth.create(accessKey, secretKey);
+        // 生成下载链接，有效期 3600 秒
+        return JarvisResult.success(auth.privateDownloadUrl(domain + "/" + fileKey, 3600));
+    }
 }
