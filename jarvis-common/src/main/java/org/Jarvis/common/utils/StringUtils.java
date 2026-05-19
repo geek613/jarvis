@@ -1,7 +1,4 @@
-package org.Jarvis.common;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+package org.Jarvis.common.utils;
 
 /**
  * 字符串工具类

@@ -1,8 +1,6 @@
-package org.jarvis.agent.core.agent;
+package org.jarvis.agent.core.agent.chartAgent;
 
 import dev.langchain4j.service.SystemMessage;
-import dev.langchain4j.service.UserMessage;
-import dev.langchain4j.service.V;
 import org.jarvis.agent.core.result.LeaderResult;
 
 public interface LeaderAgent {
