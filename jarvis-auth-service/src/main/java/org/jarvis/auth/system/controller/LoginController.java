@@ -27,4 +27,9 @@ public class LoginController {
          */
         return jSysUserService.login(loginReq.getUsername(), loginReq.getPassword());
     }
+
+    @PostMapping("/register")
+    public JarvisResult<String> register(@RequestBody LoginReq loginReq) {
+        return jSysUserService.register(loginReq.getUsername(), loginReq.getPassword());
+    }
 }

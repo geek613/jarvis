@@ -42,7 +42,7 @@ spring:
             - id: auth-route
               uri: lb://jarvis-auth-service
               predicates:
-                - Path=/api/system/**
+                - Path=/api/system/**,/api/jSysUser/**
               filters:
                 - StripPrefix=1
             #==============================
@@ -75,7 +75,15 @@ spring:
                 - Path=/api/jBiGroup/**, /api/jBiReport/**
               filters:
                 - StripPrefix=1
-
+            #==============================
+            # 系统设置服务
+            #==============================
+            - id: settings-service-route
+              uri: lb://jarvis-settings-service
+              predicates:
+                - Path=/api/jLlmConfig/**,/api/jMenu/**
+              filters:
+                - StripPrefix=1
   config:
     import:
       - optional:nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}?refreshEnabled=true

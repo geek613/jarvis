@@ -2,6 +2,7 @@ package org.jarvis.agent.chat.service;
 
 import org.jarvis.agent.chat.domain.JChatMessages;
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.jarvis.api.dto.JLlmConfigDto;
 
 import java.util.List;
 
@@ -16,4 +17,5 @@ import java.util.List;
 public interface IJChatMessagesService extends IService<JChatMessages> {
 
     List<JChatMessages> queryList(JChatMessages entity);
+    public JLlmConfigDto getUserLlmConfig(Long userId);
 }

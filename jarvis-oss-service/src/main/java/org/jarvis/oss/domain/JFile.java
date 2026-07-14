@@ -59,6 +59,12 @@ public class JFile extends BaseEntity implements Serializable {
     private String filePath;
 
     /**
+     * 文件类型
+     */
+    @TableField("file_type")
+    private String fileType;
+
+    /**
      * 文件下载完整地址
      */
     @TableField("download_url")

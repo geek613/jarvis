@@ -4,35 +4,41 @@ import com.google.gson.Gson;
 import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import lombok.extern.slf4j.Slf4j;
-import org.jarvis.agent.core.agent.ChartConfigAgent;
-import org.jarvis.agent.core.agent.DataCheckAgent;
-import org.jarvis.agent.core.agent.DataProcessAgent;
+import org.jarvis.agent.core.agent.chartAgent.ChartConfigAgent;
+import org.jarvis.agent.core.agent.chartAgent.DataCheckAgent;
+import org.jarvis.agent.core.agent.chartAgent.DataProcessAgent;
 import org.jarvis.agent.core.engine.DataProcessRuleEngine;
 import org.jarvis.agent.core.reader.ChartTemplateReader;
 import org.jarvis.agent.core.rule.DataProcessRule;
 import org.jarvis.agent.core.reader.ExcelReader;
-import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@Component
 public class LeaderTools {
-    private final ChartTemplateReader templateReader;
-    private final ChartConfigAgent chartConfigAgent;
-    private final ExcelReader excelReader;
-    private final DataProcessAgent dataProcessAgent;
-    private final DataProcessRuleEngine ruleEngine;
-    private final DataCheckAgent dataCheckAgent;
-    private final Gson gson = new Gson();
 
-    public LeaderTools(ChartTemplateReader templateReader, ChartConfigAgent chartConfigAgent, ExcelReader excelReader, DataProcessAgent dataProcessAgent, DataProcessRuleEngine ruleEngine, DataCheckAgent dataCheckAgent) {
-        this.templateReader = templateReader;
+    private final ChartTemplateReader templateReader;
+    private final ExcelReader excelReader;
+    private final DataProcessRuleEngine ruleEngine;
+    private final Gson gson;
+    private final ChartConfigAgent chartConfigAgent;
+    private final DataProcessAgent dataProcessAgent;
+    private final DataCheckAgent dataCheckAgent;
+
+    public LeaderTools(ChartConfigAgent chartConfigAgent,
+                       DataProcessAgent dataProcessAgent,
+                       DataCheckAgent dataCheckAgent,
+                       ChartTemplateReader templateReader,
+                       ExcelReader excelReader,
+                       DataProcessRuleEngine ruleEngine,
+                       Gson gson) {
         this.chartConfigAgent = chartConfigAgent;
-        this.excelReader = excelReader;
         this.dataProcessAgent = dataProcessAgent;
-        this.ruleEngine = ruleEngine;
         this.dataCheckAgent = dataCheckAgent;
+        this.templateReader = templateReader;
+        this.excelReader = excelReader;
+        this.ruleEngine = ruleEngine;
+        this.gson = gson;
     }
 
     @Tool("步骤1：处理 Excel 数据。输入参数为文件路径(filePath)、用户需求(requirement) 和 前端图表类型(chartType)。它会自动提取样本请求AI生成规则，并在底层聚合海量数据，最终返回聚合后的 JSON 字符串。")
@@ -41,17 +47,13 @@ public class LeaderTools {
             @P("用户的具体数据提取和聚合需求") String requirement,
             @P("前端需要的图表类型，如'柱状图'") String chartType) {
         log.info("[系统] 开始执行流式处理，目标图表: {}", chartType);
-        // 读取全量数据
         List<Map<String, Object>> fullData = excelReader.readExcelAsList(filePath);
         if (fullData.isEmpty()) return "[]";
-        // 截取前3行作为探针样本
         List<Map<String, Object>> sampleData = fullData.stream().limit(3).toList();
         String sampleJson = gson.toJson(sampleData);
-        // Agent生成规则
         log.info("[系统] 正在呼叫 DataProcessAgent 生成动态规则...");
         DataProcessRule rule = dataProcessAgent.generateRule(sampleJson, requirement, chartType);
         log.info("[系统] 大模型生成的规则: {}", gson.toJson(rule));
-        // 引擎执行计算
         log.info("[系统] Java 引擎开始执行全量数据清洗/聚合...");
         List<Map<String, Object>> resultData = ruleEngine.execute(fullData, rule);
         return gson.toJson(resultData);
@@ -72,10 +74,8 @@ public class LeaderTools {
 
         System.out.println("[系统] 正在读取图表模板: " + chartType);
 
-        // 1. Java 负责读取模板文件
         String templateJson = templateReader.readTemplate(chartType);
 
-        // 2. 召唤 ChartConfigAgent 进行数据填充
         log.info("[系统] 正在呼叫 ChartConfigAgent 渲染 Echarts 配置...");
         String finalEchartsOption = chartConfigAgent.generateOption(templateJson, processedData, requirement);
 

@@ -1,0 +1,66 @@
+{
+  "tooltip": {
+    "show": true,
+    "backgroundColor": "rgba(50, 50, 50, 0.7)",
+    "borderColor": "#555",
+    "textStyle": {
+      "color": "#fff"
+    },
+    "formatter": "{a} <br/>{b}: {c}"
+  },
+  "series": [
+    {
+      "name": "热词统计",
+      "type": "wordCloud",
+      "shape": "circle",
+      "left": "center",
+      "top": "center",
+      "width": "80%",
+      "height": "80%",
+      "sizeRange": [14, 60],
+      "rotationRange": [-90, 90],
+      "rotationStep": 45,
+      "gridSize": 8,
+      "drawOutOfBound": false,
+      "layoutAnimation": true,
+      "textStyle": {
+        "fontFamily": "sans-serif",
+        "fontWeight": "bold"
+      },
+      "emphasis": {
+        "focus": "self",
+        "textStyle": {
+          "textShadowBlur": 10,
+          "textShadowColor": "#333"
+        }
+      },
+      "data": [
+        {
+          "name": "核心业务",
+          "value": 1048,
+          "textStyle": { "color": "#00d4ff" }
+        },
+        {
+          "name": "次要业务",
+          "value": 735,
+          "textStyle": { "color": "#008db1" }
+        },
+        {
+          "name": "其他业务",
+          "value": 580,
+          "textStyle": { "color": "#005a74" }
+        },
+        {
+          "name": "外部引流",
+          "value": 484,
+          "textStyle": { "color": "#22333b" }
+        },
+        {
+          "name": "更多数据可在此扩展",
+          "value": 300,
+          "textStyle": { "color": "#888888" }
+        }
+      ]
+    }
+  ]
+}

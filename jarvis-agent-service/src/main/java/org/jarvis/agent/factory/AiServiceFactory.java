@@ -3,6 +3,7 @@ package org.jarvis.agent.factory;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.service.AiServices;
 import jakarta.annotation.PostConstruct; // 如果是旧版Spring Boot(2.x)，请换成 javax.annotation.PostConstruct
 import lombok.Getter;
@@ -33,13 +34,15 @@ public class AiServiceFactory {
     @Autowired
     private PersistentChatMemoryStore store;
 
-    /**
-     * -- GETTER --
-     *  获取chatModel
-     */
+    @Autowired
+    private AiModelFactory aiModelFactory;
+
     // 将模型实例作为单例成员变量保留，提升性能
     @Getter
     private OpenAiChatModel chatModel;
+
+    @Getter
+    private OpenAiStreamingChatModel streamChatModel;
 
     private ChatMemoryProvider chatMemoryProvider;
 
@@ -47,10 +50,9 @@ public class AiServiceFactory {
      * 在 Spring 注入完 @Value 属性后，自动初始化底层模型
      */
     @PostConstruct
-    public void initModel() {
+    public void initChatModel() {
         Map<String, Object> thinkingConfig = new HashMap<>();
         thinkingConfig.put("type", thinking);
-
         this.chatModel = OpenAiChatModel.builder()
                 .baseUrl(baseUrl)
                 .apiKey(apiKey)
@@ -59,8 +61,23 @@ public class AiServiceFactory {
                 .logRequests(true)
                 .logResponses(true)
                 .build();
-
         log.info("DeepSeek OpenAiChatModel 初始化完成，模型：{}", modelName);
+    }
+
+    @PostConstruct
+    public void initStreamChatModel() {
+        Map<String, Object> thinkingConfig = new HashMap<>();
+        thinkingConfig.put("type", thinking);
+        this.streamChatModel = OpenAiStreamingChatModel.builder()
+                .baseUrl(baseUrl)
+                .apiKey(apiKey)
+                .modelName(modelName)
+                .customParameters(Map.of("thinking", thinkingConfig))
+                .logRequests(true)
+                .logResponses(true)
+                .build();
+
+        log.info("DeepSeek streamChatModel 初始化完成，模型：{}", modelName);
     }
 
     @PostConstruct
@@ -88,39 +105,84 @@ public class AiServiceFactory {
     }
 
     /**
-     * 重载方法 1：传入单个或多个 Tool 实例对象 (Object...)
-     * 适用场景：你已经拿到了工具类的实例，直接传进来
-     *
-     * @param serviceClass AiService 接口类
-     * @param tools        带有 @Tool 注解的实例对象 (支持 1个 或 逗号分隔的多个)
-     *
+     * 基础方法：无 Tools，可选择是否开启流式输出
      */
-    public <T> T createService(Class<T> serviceClass, boolean enableMemory, Object... tools) {
-        if(enableMemory){
-            return AiServices.builder(serviceClass)
-                    .chatModel(chatModel)
-                    .chatMemoryProvider(chatMemoryProvider)
-                    .tools(tools)
-                    .build();
+    public <T> T createService(Class<T> serviceClass, boolean enableMemory, boolean enableStreaming) {
+        AiServices<T> builder = AiServices.builder(serviceClass);
+        if (enableStreaming) {
+            builder.streamingChatModel(streamChatModel);
+        } else {
+            builder.chatModel(chatModel);
         }
-        return AiServices.builder(serviceClass)
-                .chatModel(chatModel)
-                .tools(tools)
-                .build();
+        if (enableMemory) {
+            builder.chatMemoryProvider(chatMemoryProvider);
+        }
+        return builder.build();
+    }
+
+
+    /**
+     * 根据 userId 加载用户自定义模型创建 Service（非流式）
+     * 用户未配置时抛出异常
+     */
+    public <T> T createService(Class<T> serviceClass, boolean enableMemory, long userId) {
+        return createService(serviceClass, enableMemory, false, userId);
     }
 
     /**
-     * 重载方法 2：传入 Tool 实例集合 (Collection<Object>)
-     * 适用场景：工具实例存放在 List 或 Set 中
+     * 根据 userId 加载用户自定义模型创建 Service，可选择流式输出
+     * 用户未配置时抛出异常
+     */
+    public <T> T createService(Class<T> serviceClass, boolean enableMemory, boolean enableStreaming, long userId) {
+        OpenAiChatModel userChatModel = aiModelFactory.createChatModel(userId);
+        OpenAiStreamingChatModel userStreamChatModel = aiModelFactory.createStreamingChatModel(userId);
+        return createService(serviceClass, enableMemory, enableStreaming, userChatModel, userStreamChatModel);
+    }
+
+    /**
+     * 使用自定义模型创建 Service（同时传入 chatModel 和 streamChatModel）
+     */
+    public <T> T createService(Class<T> serviceClass, boolean enableMemory, boolean enableStreaming,
+                               OpenAiChatModel customChatModel, OpenAiStreamingChatModel customStreamChatModel) {
+        AiServices<T> builder = AiServices.builder(serviceClass);
+        if (enableStreaming) {
+            builder.streamingChatModel(customStreamChatModel != null ? customStreamChatModel : streamChatModel);
+        } else {
+            builder.chatModel(customChatModel != null ? customChatModel : chatModel);
+        }
+        if (enableMemory) {
+            builder.chatMemoryProvider(chatMemoryProvider);
+        }
+        return builder.build();
+    }
+
+    /**
+     * 根据 userId 加载用户自定义模型创建 Service，带 Tools
+     * 用户未配置时抛出异常
+     */
+    public <T> T createService(Class<T> serviceClass, boolean enableMemory, long userId, Object... tools) {
+        OpenAiChatModel userChatModel = aiModelFactory.createChatModel(userId);
+        AiServices<T> builder = AiServices.builder(serviceClass);
+        builder.chatModel(userChatModel);
+        if (enableMemory) {
+            builder.chatMemoryProvider(chatMemoryProvider);
+        }
+        builder.tools(tools);
+        return builder.build();
+    }
+
+    /**
+     * 传入 Tool 实例集合 (Collection<Object>)，使用用户自定义模型
      *
      * @param serviceClass AiService 接口类
      * @param tools        工具实例的集合
+     * @param userId       用户ID
      */
-    public <T> T createService(Class<T> serviceClass, Collection<Object> tools) {
-        // LangChain4j 的 tools 方法支持 List<Object>
+    public <T> T createService(Class<T> serviceClass, long userId, Collection<Object> tools) {
+        OpenAiChatModel userChatModel = aiModelFactory.createChatModel(userId);
         List<Object> toolList = tools instanceof List ? (List<Object>) tools : new ArrayList<>(tools);
         return AiServices.builder(serviceClass)
-                .chatModel(chatModel)
+                .chatModel(userChatModel)
                 .tools(toolList)
                 .build();
     }

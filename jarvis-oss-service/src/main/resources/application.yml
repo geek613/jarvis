@@ -16,6 +16,7 @@ spring:
         namespace: devhspro
   config:
     import:
+      - optional:nacos:common.yaml?refreshEnabled=true
       - optional:nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}?refreshEnabled=true
 server:
   port: 6133

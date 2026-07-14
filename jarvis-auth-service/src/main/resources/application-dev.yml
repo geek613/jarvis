@@ -1,37 +1,4 @@
 spring:
-  datasource:
-    # 强制指定使用 Druid 连接池
-    type: com.alibaba.druid.pool.DruidDataSource
-    # MySQL 8.x 的驱动类名 (如果是 MySQL 5.x，则是 com.mysql.jdbc.Driver)
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    # 数据库连接地址
-    url: jdbc:mysql://127.0.0.1:3306/jarvis?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
-    username: root
-    password: 1@yzw104119
-
-    # ==========================================
-    # Druid 连接池进阶配置 (核心调优参数)
-    # ==========================================
-    druid:
-      # 初始化时建立物理连接的个数
-      initial-size: 5
-      # 最小连接池数量 (连接池里随时保证有 5 个连接待命)
-      min-idle: 5
-      # 最大连接池数量 (如果并发太高，最多只能建立 20 个连接，超出的请求排队)
-      max-active: 20
-      # 获取连接时最大等待时间，单位毫秒 (排队等了 60 秒还没拿到连接，就报错)
-      max-wait: 60000
-
-      # --- 以下是为了防止数据库主动断开“假死”连接的保活配置 ---
-      # 申请连接的时候检测，如果空闲时间大于 timeBetweenEvictionRunsMillis，执行 validationQuery 检测连接是否有效
-      test-while-idle: true
-      # 用来检测连接是否有效的 sql
-      validation-query: SELECT 1
-      # 申请连接时执行 validationQuery 检测连接是否有效 (为了性能，建议设为 false)
-      test-on-borrow: false
-      # 归还连接时执行 validationQuery 检测连接是否有效 (为了性能，建议设为 false)
-      test-on-return: false
-
-      # 配置监控统计拦截的 filters
-      # stat: 开启监控统计；wall: 防御 SQL 注入；slf4j: 把慢 SQL 打印到日志里
-      filters: stat,wall,slf4j
+  config:
+    import:
+      - optional:nacos:mysql.yaml?refreshEnabled=true

@@ -1,7 +1,7 @@
 package org.jarvis.bi.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.Jarvis.common.StringUtils;
+import org.Jarvis.common.utils.StringUtils;
 import org.jarvis.bi.domain.JBiReport;
 import org.jarvis.bi.mapper.JBiReportMapper;
 import org.jarvis.bi.service.IJBiReportService;

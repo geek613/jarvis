@@ -1,11 +1,15 @@
 package org.jarvis.agent.chat.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.Jarvis.common.StringUtils;
+import org.Jarvis.common.utils.StringUtils;
+import org.Jarvis.common.contants.Constants;
 import org.jarvis.agent.chat.domain.JChatMessages;
 import org.jarvis.agent.chat.mapper.JChatMessagesMapper;
 import org.jarvis.agent.chat.service.IJChatMessagesService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.jarvis.agent.feign.JarvisSettingsServiceFeignClient;
+import org.jarvis.api.dto.JLlmConfigDto;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +24,8 @@ import java.util.List;
  */
 @Service
 public class JChatMessagesServiceImpl extends ServiceImpl<JChatMessagesMapper, JChatMessages> implements IJChatMessagesService {
+    @Autowired
+    private JarvisSettingsServiceFeignClient settingsServiceFeignClient;
 
     @Override
     public List<JChatMessages> queryList(JChatMessages entity) {
@@ -38,5 +44,17 @@ public class JChatMessagesServiceImpl extends ServiceImpl<JChatMessagesMapper, J
         }
         qw.orderByDesc(JChatMessages::getId);
         return this.list(qw);
+    }
+
+    @Override
+    public JLlmConfigDto getUserLlmConfig(Long userId) {
+        String key = Constants.JLLM_CONFIG_kEY + userId;
+
+        // 拉取配置
+        JLlmConfigDto userLlmConfig = settingsServiceFeignClient.getUserLlmConfig(userId);
+        if(userLlmConfig == null){
+
+        }
+        return null;
     }
 }

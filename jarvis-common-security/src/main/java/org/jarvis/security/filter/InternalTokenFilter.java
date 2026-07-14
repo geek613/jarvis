@@ -36,27 +36,39 @@ public class InternalTokenFilter extends OncePerRequestFilter {
 
         // 如果 Token 存在，进行解析验证
         if (StringUtils.hasText(token)) {
-            try {
-                // TODO: 替换为JWT解析逻辑
-                Key key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
-                Claims claims = Jwts.parserBuilder()
-                        .setSigningKey(key)
-                        .build()
-                        .parseClaimsJws(token)
-                        .getBody();
-                String userId = claims.getSubject();
-                // 构建 Spring Security 的 Authentication 对象
-                // 参数：用户信息(通常是 userId 或 UserDetail 对象), 凭证(可传null), 权限列表(RBAC)
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
-                // 将认证信息存入上下文，表示该请求已通过认证
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (Exception e) {
-                // 解析失败（过期、伪造等），不设置 SecurityContext，后续会被拦截
-                logger.error("Token 解析失败: " + e.getMessage());
+            authenticateFromToken(token);
+        } else {
+            // 检查是否来自 Gateway 的 user-id 头（Gateway 已验证过 Token）
+            String gatewayUserId = request.getHeader("user-id");
+            if (StringUtils.hasText(gatewayUserId)) {
+                authenticateFromUserId(gatewayUserId);
+            } else {
+                // Token 和 user-id 都不存在，清除上下文
+                SecurityContextHolder.clearContext();
             }
         }
         // 放行请求，交给下一个过滤器或 Controller
         filterChain.doFilter(request, response);
+    }
+
+    private void authenticateFromToken(String token) {
+        try {
+            Key key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+            String userId = claims.getSubject();
+            authenticateFromUserId(userId);
+        } catch (Exception e) {
+            logger.error("Token 解析失败: " + e.getMessage());
+        }
+    }
+
+    private void authenticateFromUserId(String userId) {
+        UsernamePasswordAuthenticationToken authentication =
+                new UsernamePasswordAuthenticationToken(userId, null, Collections.emptyList());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 }

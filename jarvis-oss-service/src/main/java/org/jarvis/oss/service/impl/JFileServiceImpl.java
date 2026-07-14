@@ -1,7 +1,7 @@
 package org.jarvis.oss.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import org.Jarvis.common.StringUtils;
+import org.Jarvis.common.utils.StringUtils;
 import org.jarvis.oss.domain.JFile;
 import org.jarvis.oss.mapper.JFileMapper;
 import org.jarvis.oss.service.IJFileService;
@@ -26,6 +26,9 @@ public class JFileServiceImpl extends ServiceImpl<JFileMapper, JFile> implements
         LambdaQueryWrapper<JFile> qw = new LambdaQueryWrapper();
         if(file.getUserId() != null){
             qw.eq(JFile::getUserId, file.getUserId());
+        }
+        if(StringUtils.isNotEmpty(file.getFileType())){
+            qw.eq(JFile::getFileType, file.getFileType());
         }
         return this.list(qw);
     }

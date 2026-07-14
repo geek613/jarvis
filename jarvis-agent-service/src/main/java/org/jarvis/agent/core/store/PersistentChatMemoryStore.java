@@ -8,7 +8,7 @@ import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.ChatMessageDeserializer;
 import dev.langchain4j.data.message.ChatMessageSerializer;
 import dev.langchain4j.store.memory.chat.ChatMemoryStore;
-import org.Jarvis.common.StringUtils;
+import org.Jarvis.common.utils.StringUtils;
 import org.jarvis.agent.chat.domain.JChatMessages;
 import org.jarvis.agent.chat.mapper.JChatMessagesMapper;
 import org.jarvis.agent.chat.service.JarvisGetChatTitleService;

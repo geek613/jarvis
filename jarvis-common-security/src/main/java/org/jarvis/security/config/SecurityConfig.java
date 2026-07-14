@@ -41,6 +41,7 @@ public class SecurityConfig {
                     auth
                             // 开发公共接口（如健康检查、部分不需要登录的接口）
                             .requestMatchers("/actuator/**", "/public/**").permitAll()
+                            .requestMatchers("/error").permitAll()
                             // 其他所有请求都必须认证
                             .anyRequest().authenticated();
                 })

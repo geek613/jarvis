@@ -58,7 +58,7 @@ public class JarvisResult<T> {
         return new JarvisResult<T>(StatusCode.FAIL.getCode(), StatusCode.FAIL.getMsg());
     }
     public static JarvisResult<String> error(String message) {
-        return new JarvisResult<>(message);
+        return new JarvisResult<>(StatusCode.FAIL.getCode(), message);
     }
 
 

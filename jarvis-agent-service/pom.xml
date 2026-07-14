@@ -20,15 +20,11 @@
     <dependencies>
         <dependency>
             <groupId>org.jarvis</groupId>
-            <artifactId>jarvis-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jarvis</groupId>
             <artifactId>jarvis-common-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jarvis</groupId>
-            <artifactId>jarvis-common-security</artifactId>
+            <artifactId>jarvis-commom-api</artifactId>
         </dependency>
         <dependency>
             <groupId>dev.langchain4j</groupId>
@@ -45,6 +41,10 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-pool2</artifactId>
         </dependency>
     </dependencies>
 

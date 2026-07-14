@@ -26,6 +26,7 @@ public class ChartTemplateReader {
         if (chartType.contains("散点") || chartType.toLowerCase().contains("scatter")) return "scatter.json";
         if (chartType.contains("折线") || chartType.toLowerCase().contains("line")) return "line.json";
         if (chartType.contains("饼") || chartType.toLowerCase().contains("pie")) return "pie.json";
+        if (chartType.contains("词云") || chartType.toLowerCase().contains("wordcloud")) return "wordCloud.json";
         return "bar.json"; // 默认柱状图
     }
 }

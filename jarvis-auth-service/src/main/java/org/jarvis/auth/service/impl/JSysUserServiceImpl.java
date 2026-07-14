@@ -1,8 +1,10 @@
 package org.jarvis.auth.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.Jarvis.common.result.JarvisResult;
+import org.Jarvis.common.utils.StringUtils;
 import org.jarvis.auth.domain.JSysUser;
 import org.jarvis.auth.mapper.JSysUserMapper;
 import org.jarvis.auth.service.IJSysUserService;
@@ -42,5 +44,38 @@ public class JSysUserServiceImpl extends ServiceImpl<JSysUserMapper, JSysUser> i
         res.setData(token);
         log.info("用户 {} 登录成功，生成 Token：{}", username, token);
         return res;
+    }
+
+    @Override
+    public JarvisResult<String> register(String username, String password) {
+        List<JSysUser> list = baseMapper.selectList(new QueryWrapper<JSysUser>().eq("username", username));
+        if (!list.isEmpty()) {
+            return JarvisResult.error("用户名已存在");
+        }
+        JSysUser user = new JSysUser();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setStatus(true);
+        baseMapper.insert(user);
+        return JarvisResult.success("注册成功");
+    }
+
+    @Override
+    public List<JSysUser> queryList(JSysUser user) {
+        LambdaQueryWrapper<JSysUser> qw = new LambdaQueryWrapper<>();
+        if (StringUtils.isNotEmpty(user.getUsername())) {
+            qw.like(JSysUser::getUsername, user.getUsername());
+        }
+        if (StringUtils.isNotEmpty(user.getEmail())) {
+            qw.like(JSysUser::getEmail, user.getEmail());
+        }
+        if (StringUtils.isNotEmpty(user.getPhone())) {
+            qw.like(JSysUser::getPhone, user.getPhone());
+        }
+        if (user.getStatus() != null) {
+            qw.eq(JSysUser::getStatus, user.getStatus());
+        }
+        qw.orderByAsc(JSysUser::getUserId);
+        return this.list(qw);
     }
 }

@@ -19,7 +19,7 @@ public interface LeaderAgent {
             "- chartName: 图表名称。根据用户的提示词合理的生成一个简短的图表名称",
             "- chartType: 图表类型。根据用户的提示词生成图表类型，需要使用英文名称，柱状图：bar,折线图：line,散点图：scatter,饼图pie",
             "- chartOption: 请将步骤3生成的 Echarts 最终配置 JSON 放入此字段。",
-            "直接输出纯 JSON 字符串，绝不允许包含任何前言后语，绝不允许使用 Markdown。"
+            "[注意]直接输出纯 JSON 字符串，绝不允许包含任何前言后语，绝不允许使用 Markdown。"
     })
     LeaderResult handleTask(String userRequest);
 }

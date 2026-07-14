@@ -70,6 +70,7 @@ public class ExcelReader {
 
             // 直接将网络流 InputStream 交给 Fesod 解析
             try (InputStream inputStream = connection.getInputStream()) {
+                // 读取出的结构：List[map(1, v1->xx,v2->yy,v3->zz....)]
                 List<Map<Integer, String>> list = FesodSheet.read(inputStream)
                         .sheet()
                         .headRowNumber(0)
@@ -94,10 +95,13 @@ public class ExcelReader {
      * 数据格式化与表头映射 (完全保留你写的方法)
      */
     private static @NonNull List<Map<String, Object>> getMapList(List<Map<Integer, String>> list) {
+        // 表头
         Map<Integer, String> headerMap = list.get(0);
         List<Map<String, Object>> resultList = new ArrayList<>();
         for (int i = 1; i < list.size(); i++) {
+            // 每一行的数据，取出来的都是map
             Map<Integer, String> rowData = list.get(i);
+            //
             Map<String, Object> row = new LinkedHashMap<>();
             headerMap.forEach((index, name) -> {
                 if (name != null && !name.trim().isEmpty()) {
