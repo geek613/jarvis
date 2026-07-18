@@ -56,4 +56,21 @@
             <artifactId>jjwt-jackson</artifactId>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <!-- 核心插件：负责将项目打包成可执行的 Spring Boot JAR -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!-- 确保执行 repackage 目标，生成包含主清单属性的 jar -->
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

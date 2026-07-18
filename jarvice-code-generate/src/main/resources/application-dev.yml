@@ -5,7 +5,7 @@ spring:
     # MySQL 8.x 的驱动类名 (如果是 MySQL 5.x，则是 com.mysql.jdbc.Driver)
     driver-class-name: com.mysql.cj.jdbc.Driver
     # 数据库连接地址
-    url: jdbc:mysql://127.0.0.1:3306/jarvis?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://192.168.1.9:3306/jarvis?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=Asia/Shanghai
     username: root
     password: 1@yzw104119
 

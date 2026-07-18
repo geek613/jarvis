@@ -6,15 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.Jarvis.common.result.JarvisResult;
 import org.jarvis.agent.chat.domain.dto.JChatDto;
 import org.jarvis.agent.chat.service.JarvisChatService;
-import org.jarvis.agent.core.agent.chartAgent.ChartConfigAgent;
-import org.jarvis.agent.core.agent.chartAgent.DataCheckAgent;
-import org.jarvis.agent.core.agent.chartAgent.DataProcessAgent;
-import org.jarvis.agent.core.agent.chartAgent.LeaderAgent;
-import org.jarvis.agent.core.engine.DataProcessRuleEngine;
-import org.jarvis.agent.core.reader.ChartTemplateReader;
-import org.jarvis.agent.core.reader.ExcelReader;
-import org.jarvis.agent.core.result.LeaderResult;
-import org.jarvis.agent.core.tools.LeaderTools;
 import org.jarvis.agent.factory.AiServiceFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -30,15 +21,6 @@ public class ChatController {
 
     @Autowired
     private Gson gson;
-
-    @Autowired
-    private ChartTemplateReader templateReader;
-
-    @Autowired
-    private ExcelReader excelReader;
-
-    @Autowired
-    private DataProcessRuleEngine ruleEngine;
 
     @GetMapping("/chat")
     public JarvisResult<String> chat(JChatDto chat) {
@@ -91,18 +73,5 @@ public class ChatController {
         return emitter;
     }
 
-    @GetMapping("/generateChart")
-    public JarvisResult<LeaderResult> generateChart(JChatDto chat) {
-        long userId = chat.getUserId();
-        ChartConfigAgent chartConfigAgent = aiServiceFactory.createService(ChartConfigAgent.class, false, userId);
-        DataProcessAgent dataProcessAgent = aiServiceFactory.createService(DataProcessAgent.class, false, userId);
-        DataCheckAgent dataCheckAgent = aiServiceFactory.createService(DataCheckAgent.class, false, userId);
-        LeaderTools leaderTools = new LeaderTools(
-                chartConfigAgent,
-                dataProcessAgent,
-                dataCheckAgent,
-                templateReader, excelReader, ruleEngine, gson);
-        LeaderAgent leaderAgent = aiServiceFactory.createService(LeaderAgent.class, false, userId, leaderTools);
-        return JarvisResult.success(leaderAgent.handleTask(chat.getMessage()));
-    }
+
 }

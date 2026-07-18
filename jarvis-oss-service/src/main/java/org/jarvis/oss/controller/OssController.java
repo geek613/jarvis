@@ -56,7 +56,7 @@ public class OssController {
 
     @GetMapping("/overwriteToken")
     public JarvisResult<Map<String, Object>> getOverwriteToken(@RequestParam("oldFileKey") String oldFileKey, @RequestParam("newFileKey") String newFileKey) {
-        Configuration cfg = new Configuration(Region.qvmHuabei());
+        Configuration cfg = new Configuration(Region.createWithRegionId("na0"));
         Auth auth = Auth.create(accessKey, secretKey);
         BucketManager bucketManager = new BucketManager(auth, cfg);
         try {
@@ -81,7 +81,7 @@ public class OssController {
 
     @DeleteMapping("/remove/{id}")
     public JarvisResult<String> deleteFile(@PathVariable("id") Long id) {
-        Configuration cfg = new Configuration(Region.qvmHuabei());
+        Configuration cfg = new Configuration(Region.createWithRegionId("na0"));
         Auth auth = Auth.create(accessKey, secretKey);
         BucketManager bucketManager = new BucketManager(auth, cfg);
         JFile jFile = ijFileService.getById(id);
